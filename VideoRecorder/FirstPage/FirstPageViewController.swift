@@ -11,27 +11,26 @@ class FirstPageViewController: UIViewController {
     
     let date = Date()
     
-    let dum: [String] = ["sssssssssssssssssssssssssssssssssssssssssssssssssssssss",
-                         "ssssssssssssssssssssssssssssssssssssssssssss",
-                         "sssssssssssssssssssssssssssssssss",
-                         "ssssssssssssssssssssssssssssssssssssssssssss",
-                         "ssssssssssssssssssssss",
-                         "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss",
-                         "s",
-                         "sssss",
-                         "aa",
-                         "aaaa"
+    let dum: [String] = ["텍스트입니다.텍스트입니다.",
+                         "텍스트입니다.",
+                         "텍스트입니다.",
+                         "텍스트입니다.",
+                         "텍스트입니다.",
+                         "텍스트입니다.",
+                         "텍스트입니다.",
+                         "텍스트입니다.",
+                         "텍스트입니다.",
+                         "텍스트입니다."
     ]
     
     let img = ["suit.diamond", "suit.heart", "suit.club", "suit.diamond", "suit.heart", "suit.club", "suit.club", "suit.heart", "suit.club", "suit.club"]
     
     private let tableView: UITableView = {
         let tableView = UITableView(frame: CGRect.zero, style: .grouped)
-        tableView.backgroundColor = .systemBackground
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.rowHeight = UITableView.automaticDimension
         tableView.register(FirstPageTableViewCell.self, forCellReuseIdentifier: FirstPageTableViewCell.identifier)
-        tableView.backgroundColor = .green
+//        tableView.register(<#T##nib: UINib?##UINib?#>, forHeaderFooterViewReuseIdentifier: <#T##String#>)
+        tableView.backgroundColor = .purple
         return tableView
     }()
     
@@ -40,6 +39,7 @@ class FirstPageViewController: UIViewController {
         
         configure()
         tableViewLayout()
+        tableView.rowHeight = UITableView.automaticDimension
         
     }
     
@@ -47,16 +47,17 @@ class FirstPageViewController: UIViewController {
         
         view.addSubview(tableView)
         
-        tableView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        NSLayoutConstraint.activate([
+        tableView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+        tableView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+        tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+        tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+        ])
     }
     
     private func configure() {
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.rowHeight = view.frame.size.height / 10
     }
     
     private func addConTentView() {
@@ -83,7 +84,8 @@ extension FirstPageViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: FirstPageTableViewCell.identifier, for: indexPath) as? FirstPageTableViewCell else { return UITableViewCell() }
         cell.textlabel.text = dum[indexPath.row]
         cell.image.image = UIImage(systemName: img[indexPath.row])
+        cell.datelabel.text = "2022-10-12"
         return cell
     }
-
+    
 }
