@@ -87,7 +87,7 @@ class FirstPageViewController: UIViewController {
 extension FirstPageViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-     
+        
         let title = model[indexPath.row].title
         let videoPath = directoryPath.appendingPathComponent(title).appendingPathExtension("mp4")
         if FileManager.default.fileExists(atPath: videoPath.path ){
@@ -95,7 +95,7 @@ extension FirstPageViewController: UITableViewDelegate {
                 let player = AVPlayer(url: videoPath)
                 let playerViewController = AVPlayerViewController()
                 playerViewController.player = player
-               
+                
                 self.present(playerViewController, animated: true) {
                     playerViewController.player!.play()
                 }
@@ -106,7 +106,7 @@ extension FirstPageViewController: UITableViewDelegate {
             print("No Video")
         }
     }
-
+    
 }
 
 extension FirstPageViewController: UITableViewDataSource {
@@ -145,6 +145,25 @@ extension FirstPageViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return tableView.estimatedRowHeight
+    }
+    
+    func tableView( _ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete{
+            let targetTitle = model[indexPath.row].title
+            var targetForCoreData = Title()
+            _ = CoreDataManager.shared.fetch(request: request).map{
+                if $0.title == targetTitle{
+                    targetForCoreData = $0
+                }
+            }
+            CoreDataManager.shared.delete(object: targetForCoreData)
+            let videoURL = directoryPath.appendingPathComponent(targetTitle).appendingPathExtension("mp4")
+            let modelURL = directoryPath.appendingPathComponent(targetTitle).appendingPathExtension("json")
+            try? FileManager.default.removeItem(at: videoURL)
+            try? FileManager.default.removeItem(at: modelURL)
+            model.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
     }
     
 }
