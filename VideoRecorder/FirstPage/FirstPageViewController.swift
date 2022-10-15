@@ -44,13 +44,13 @@ class FirstPageViewController: UIViewController {
         configTableView()
         setCameraButton()
         setTableView()
-        askForLibraryPermission{ granted in
-            guard granted else { return }
-            self.fetchAssests()
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
+//        askForLibraryPermission{ granted in
+//            guard granted else { return }
+//            self.fetchAssests()
+//            DispatchQueue.main.async {
+//                self.tableView.reloadData()
+//            }
+//        }
         
         creatDirectory()
         
@@ -110,33 +110,33 @@ class FirstPageViewController: UIViewController {
       //  VideoHelper.startMediaBrowser(delegate: self, sourceType: .camera)
     }
     
-    func askForLibraryPermission(completionHandler:@escaping (Bool) -> Void){
-        //get the current authorization status from PHPhotoLibrary. If it’s already authorized, call the completion handler with a value of true.
-        guard PHPhotoLibrary.authorizationStatus() != .authorized else {
-            completionHandler(true)
-            return
-        }
-        //If permission was not previously granted, request it. When requesting authorization, iOS displays an alert dialog box asking for permission.
-        PHPhotoLibrary.requestAuthorization{ status in
-            //It passes back the status as a PHAuthorizationStatus object in its completion handler.
-            completionHandler(status == .authorized)
-        }
-        //PHAuthorizationStatus is an enum, which can also return notDetermined, restricted, denied and, new to iOS 14, limited
-    }
+//    func askForLibraryPermission(completionHandler:@escaping (Bool) -> Void){
+//        //get the current authorization status from PHPhotoLibrary. If it’s already authorized, call the completion handler with a value of true.
+//        guard PHPhotoLibrary.authorizationStatus() != .authorized else {
+//            completionHandler(true)
+//            return
+//        }
+//        //If permission was not previously granted, request it. When requesting authorization, iOS displays an alert dialog box asking for permission.
+//        PHPhotoLibrary.requestAuthorization{ status in
+//            //It passes back the status as a PHAuthorizationStatus object in its completion handler.
+//            completionHandler(status == .authorized)
+//        }
+//        //PHAuthorizationStatus is an enum, which can also return notDetermined, restricted, denied and, new to iOS 14, limited
+//    }
     
-    func fetchAssests(){
-        //When fetching assets, you can apply a set of options that dictate the sorting, filtering and management of results.
-        let allPhotosOptions = PHFetchOptions()
-        allPhotosOptions.sortDescriptors = [
-            NSSortDescriptor(key: "creationDate", ascending: false)
-        ]
-        //PHAsset provides functionality for fetching assets and returning the results as a PHFetchResult
-        allPhotos = PHAsset.fetchAssets(with: allPhotosOptions)
-        //The Photos app automatically creates smart albums, such as Favorites and Recents. Albums are a group of assets and, as such, belong in PHAssetCollection objects. Here you fetch smart album collections. You won’t sort these, so options is nil.
-        smartAlbums = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .albumRegular, options: nil)
-        //Accessing user created albums is similar, except that you fetch the .album type.
-        userCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: nil)
-    }
+//    func fetchAssests(){
+//        //When fetching assets, you can apply a set of options that dictate the sorting, filtering and management of results.
+//        let allPhotosOptions = PHFetchOptions()
+//        allPhotosOptions.sortDescriptors = [
+//            NSSortDescriptor(key: "creationDate", ascending: false)
+//        ]
+//        //PHAsset provides functionality for fetching assets and returning the results as a PHFetchResult
+//        allPhotos = PHAsset.fetchAssets(with: allPhotosOptions)
+//        //The Photos app automatically creates smart albums, such as Favorites and Recents. Albums are a group of assets and, as such, belong in PHAssetCollection objects. Here you fetch smart album collections. You won’t sort these, so options is nil.
+//        smartAlbums = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .albumRegular, options: nil)
+//        //Accessing user created albums is similar, except that you fetch the .album type.
+//        userCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: nil)
+//    }
     
 }
 
@@ -151,6 +151,7 @@ extension FirstPageViewController : UITableViewDataSource {
         let videoURL = directoryPath.appendingPathComponent(info.title).appendingPathExtension("mp4")
         let thumbnail = getThumbnailImage(forUrl: videoURL) ?? UIImage()
         cell.thumbnailView.setInfo(img: thumbnail, time: Double(info.playTime).format(units: [.minute, .second]))
+        rotateThumbnail(orientation: info.orientation, viewToRotate: cell.thumbnailView.imageView)
         cell.setInfo(title: info.title, date: dateToString(info.date))
 
         return cell
@@ -183,68 +184,70 @@ extension FirstPageViewController : UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //VideoHelper.startMediaBrowser(delegate: self, sourceType: .savedPhotosAlbum)    //PHPicker 사용해보기
-//        let videoPath = directoryPath.appendingPathComponent(videoTitle).appendingPathExtension("mp4")
-//        if FileManager.default.fileExists(atPath: videoPath.path ){
-//            do{
-//                let player = AVPlayer(url: videoPath)
-//                let playerViewController = AVPlayerViewController()
-//                playerViewController.player = player
-//                self.present(playerViewController, animated: true) {
-//                    playerViewController.player!.play()
-//                }
-//            }catch{
-//                print(error.localizedDescription)
-//            }
-//        }else{
-//            print("No Video")
-//        }
-    }
-    
-}
-
-extension FirstPageViewController : UIImagePickerControllerDelegate{//You’ll use the system-provided UIImagePickerController to let the user browse videos in the photo library.
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        print("called!!")
-        if picker.sourceType == UIImagePickerController.SourceType.camera{
-            dismiss(animated: true)
-            //As before, the delegate method gives you a URL pointing to the video.
-            guard let mediaType = info[UIImagePickerController.InfoKey.mediaType] as? String, mediaType == UTType.movie.identifier, let url = info[UIImagePickerController.InfoKey.mediaURL] as? URL, UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(url.path()) else { return }
-            //Verify that the app can save the file to the device’s photo album.
-            //If it can, save it.
-            UISaveVideoAtPathToSavedPhotosAlbum(url.path(), self, #selector(video), nil)
-        }else{
-            //You get the media type of the selected media and URL and ensure it’s a video.
-            guard let mediaType = info[UIImagePickerController.InfoKey.mediaType] as? String, mediaType == UTType.movie.identifier, let url = info[UIImagePickerController.InfoKey.mediaURL] as? URL else { return }
-            //you dismiss the image picker.
-            dismiss(animated: true){
-                //In the completion block, you create an AVPlayerViewController to play the media.
-                let player = AVPlayer(url: url)
-                let vcPlayer = AVPlayerViewController()
-                vcPlayer.player = player
-                self.present(vcPlayer, animated: true)
+        let title = model[indexPath.row].title
+        let videoPath = directoryPath.appendingPathComponent(title).appendingPathExtension("mp4")
+        if FileManager.default.fileExists(atPath: videoPath.path ){
+            do{
+                let player = AVPlayer(url: videoPath)
+                let playerViewController = AVPlayerViewController()
+                playerViewController.player = player
+                //playerViewController.showsPlaybackControls = false
+                self.present(playerViewController, animated: true) {
+                    playerViewController.player!.play()
+                }
+            }catch{
+                print(error.localizedDescription)
             }
+        }else{
+            print("No Video")
         }
     }
-    //The callback method simply displays an alert to the user, announcing whether the video file was saved or not, based on the error status.
-    @objc func video(_ videoPath: String, didFinishSavingWithError error: Error?, contextInfo info: AnyObject){
-        let title = (error == nil) ? "Success" : "Error"
-          let message = (error == nil) ? "Video was saved" : "Video failed to save"
-          let alert = UIAlertController(
-            title: title,
-            message: message,
-            preferredStyle: .alert)
-          alert.addAction(UIAlertAction(
-            title: "OK",
-            style: UIAlertAction.Style.cancel,
-            handler: nil))
-          present(alert, animated: true, completion: nil)
-    }
     
 }
 
-extension FirstPageViewController : UINavigationControllerDelegate{
-    
-}
+//extension FirstPageViewController : UIImagePickerControllerDelegate{//You’ll use the system-provided UIImagePickerController to let the user browse videos in the photo library.
+//    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+//        print("called!!")
+//        if picker.sourceType == UIImagePickerController.SourceType.camera{
+//            dismiss(animated: true)
+//            //As before, the delegate method gives you a URL pointing to the video.
+//            guard let mediaType = info[UIImagePickerController.InfoKey.mediaType] as? String, mediaType == UTType.movie.identifier, let url = info[UIImagePickerController.InfoKey.mediaURL] as? URL, UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(url.path()) else { return }
+//            //Verify that the app can save the file to the device’s photo album.
+//            //If it can, save it.
+//            UISaveVideoAtPathToSavedPhotosAlbum(url.path(), self, #selector(video), nil)
+//        }else{
+//            //You get the media type of the selected media and URL and ensure it’s a video.
+//            guard let mediaType = info[UIImagePickerController.InfoKey.mediaType] as? String, mediaType == UTType.movie.identifier, let url = info[UIImagePickerController.InfoKey.mediaURL] as? URL else { return }
+//            //you dismiss the image picker.
+//            dismiss(animated: true){
+//                //In the completion block, you create an AVPlayerViewController to play the media.
+//                let player = AVPlayer(url: url)
+//                let vcPlayer = AVPlayerViewController()
+//                vcPlayer.player = player
+//                self.present(vcPlayer, animated: true)
+//            }
+//        }
+//    }
+//    //The callback method simply displays an alert to the user, announcing whether the video file was saved or not, based on the error status.
+//    @objc func video(_ videoPath: String, didFinishSavingWithError error: Error?, contextInfo info: AnyObject){
+//        let title = (error == nil) ? "Success" : "Error"
+//          let message = (error == nil) ? "Video was saved" : "Video failed to save"
+//          let alert = UIAlertController(
+//            title: title,
+//            message: message,
+//            preferredStyle: .alert)
+//          alert.addAction(UIAlertAction(
+//            title: "OK",
+//            style: UIAlertAction.Style.cancel,
+//            handler: nil))
+//          present(alert, animated: true, completion: nil)
+//    }
+//
+//}
+//
+//extension FirstPageViewController : UINavigationControllerDelegate{
+//
+//}
 
 
 
@@ -316,7 +319,7 @@ class Thumbnail : UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setConstraint()
-        imageView.transform = CGAffineTransform(rotationAngle: .pi / 2)
+
     }
     
     required init?(coder: NSCoder) {
@@ -341,6 +344,9 @@ class Thumbnail : UIView {
     func setInfo(img:UIImage,time:String){
         self.imageView.image = img
         self.duration.text   = time
+        if (imageView.image?.size.height)! > (imageView.image?.size.width)!{
+            imageView.transform = CGAffineTransform(rotationAngle: .pi / 2)
+        }
     }
 }
 
@@ -371,7 +377,7 @@ extension FirstPageViewController {
                     let jsonDecoder = JSONDecoder()
                     let data = try Data(contentsOf: modelPath)
                     let model = try jsonDecoder.decode(VideoModel.self, from: data)
-                    self.model.append(VideoModel(title: model.title, date: model.date, playTime: model.playTime))
+                    self.model.append(VideoModel(title: model.title, date: model.date, playTime: model.playTime,orientation: model.orientation))
                 }catch{
                     print(error.localizedDescription)
                 }
@@ -385,5 +391,15 @@ extension FirstPageViewController {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "YYYY-MM-dd"
         return dateFormatter.string(from: date)
+    }
+    
+    func rotateThumbnail(orientation:Int, viewToRotate:UIView){
+        switch orientation{
+        case 1: viewToRotate.transform = CGAffineTransform(rotationAngle: .pi / 2)
+        case 2: viewToRotate.transform = CGAffineTransform(rotationAngle: -.pi / 2)
+        case 3: viewToRotate.transform = CGAffineTransform(rotationAngle: .pi * 2)
+        case 4: viewToRotate.transform = CGAffineTransform(rotationAngle: .pi)
+        default: print("no case")
+        }
     }
 }

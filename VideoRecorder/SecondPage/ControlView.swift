@@ -22,6 +22,7 @@ class ControlView : UIView {
         self.layer.cornerRadius = 20
         blurEffect()
         setRecordButton()
+        setRedButton()
         setswitchButton()
         setTimeLabel()
     }
@@ -54,6 +55,17 @@ class ControlView : UIView {
         ])
     }
     
+    func setRedButton(){
+        recordButton.addSubview(redButton)
+        redButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            redButton.widthAnchor.constraint(equalToConstant: 50),
+            redButton.heightAnchor.constraint(equalToConstant: 50),
+            redButton.centerYAnchor.constraint(equalTo: recordButton.centerYAnchor),
+            redButton.centerXAnchor.constraint(equalTo: recordButton.centerXAnchor)
+        ])
+    }
+    
     func setTimeLabel(){
         self.addSubview(timeLabel)
         timeLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -83,6 +95,14 @@ class ControlView : UIView {
         btn.addTarget(self, action: #selector(rollCamera), for: .touchUpInside)
         return btn
     }()
+    lazy var redButton : RedButton = {
+        let btn = RedButton()
+        btn.backgroundColor = .red
+        btn.clipsToBounds = true
+        btn.layer.cornerRadius = 25
+        return btn
+    }()
+    
     let timeLabel : UILabel = {
         let lbl = UILabel()
         lbl.font = .systemFont(ofSize: 20)
@@ -107,5 +127,29 @@ class ControlView : UIView {
     
     @objc func rollCamera(){
         delegate?.rollCamera()
+    }
+    
+    func redButtonRecordingAnimation(){
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 10, initialSpringVelocity: 10){
+            self.redButton.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+            self.redButton.layer.cornerRadius = 5
+        }
+    }
+    
+    func redButtonStopAnimation(){
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 10, initialSpringVelocity: 10){
+            self.redButton.transform = .identity
+            self.redButton.layer.cornerRadius = 25
+        }
+    }
+}
+
+class RedButton : UIView{
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let hitView = super.hitTest(point, with: event)
+        if self == hitView{
+            return nil
+        }
+        return hitView
     }
 }

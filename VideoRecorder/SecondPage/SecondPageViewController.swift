@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVKit
 import AVFoundation
 import CoreMotion
 import CoreData
@@ -15,7 +16,7 @@ class SecondPageViewController: UIViewController {
     var timer: Timer?
     var secondsOfTimer = 0
     var motionManager: CMMotionManager!
-    
+        
     let request : NSFetchRequest<Title> = Title.fetchRequest()
 
     let captureSession = AVCaptureSession()
@@ -34,6 +35,7 @@ class SecondPageViewController: UIViewController {
     let directoryPath : URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("VideoRecorder")
     
     var videoTitle : String?
+    var videoOrientation : AVCaptureVideoOrientation?
     
     func setCloseView(){
         view.addSubview(closeView)
@@ -63,16 +65,31 @@ class SecondPageViewController: UIViewController {
     let controlView = ControlView()
     let closeView = CloseView()
     lazy var tapGesture = UITapGestureRecognizer(target: self, action: #selector(close))
-    private let sessionQueue = DispatchQueue(label: "session queue")
 
     //MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        askPermissionForMicrophone()
+        askPermissionForCamera()
         initMotionManager()
         askPermissionForCamera()
         setControlView()
         setCloseView()
         controlView.delegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+      super.viewWillAppear(animated)
+      initMotionManager()
+      if !captureSession.isRunning {
+          startCaptureSession()
+      }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+      super.viewWillDisappear(animated)
+      motionManager.stopAccelerometerUpdates()
+      stopTimer()
     }
     
     @objc func close(){
@@ -94,7 +111,7 @@ class SecondPageViewController: UIViewController {
                 )
             }
         case .denied :
-            showAlertGoToSetting()
+            showAlertGoToSetting(device: "카메라")
         case .restricted :
             break
         @unknown default:
@@ -102,9 +119,19 @@ class SecondPageViewController: UIViewController {
         }
     }
     
-    func showAlertGoToSetting() {
+    func askPermissionForMicrophone(){
+            AVAudioSession.sharedInstance().requestRecordPermission({(granted: Bool)-> Void in
+                if granted {
+                    print("Mic: 권한 허용")
+                } else {
+                    self.showAlertGoToSetting(device: "마이크")
+                }
+            })
+        }
+    
+    func showAlertGoToSetting(device : String) {
         let alertController = UIAlertController(
-            title: "현재 카메라 사용에 대한 접근 권한이 없습니다.",
+            title: "현재 \(device) 사용에 대한 접근 권한이 없습니다.",
             message: "설정 > VideoRecorder 탭에서 접근을 활성화 할 수 있습니다.",
             preferredStyle: .alert
         )
@@ -212,47 +239,46 @@ class SecondPageViewController: UIViewController {
 //MARK: - 카메라 전환 버튼, 촬영 버튼
 extension SecondPageViewController : ControlViewDelegate{
     func rollCamera() {
-        print("rollCamera")
         if videoOutput.isRecording{
-            print("stop")
+            controlView.redButtonStopAnimation()
             stopRecording()
         }else{
-            print("start")
+            controlView.redButtonRecordingAnimation()
             startRecording()
         }
     }
     
     
     func switchCamera() {
-        //        sessionQueue.async { [self] in
-        //            let currentVideoDevice = self.videoDeviceInput?.device
-        //            let currentPosition = currentVideoDevice?.position  //physical position
-        //            let backVideoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInDualCamera, .builtInDualWideCamera, .builtInWideAngleCamera], mediaType: .video, position: .back)
-        //            let frontVideoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInTrueDepthCamera, .builtInWideAngleCamera], mediaType: .video, position: .front)
-        //            var newVideoDevice : AVCaptureDevice? = nil
-        //            switch currentPosition {
-        //            case .front, .unspecified :
-        //                newVideoDevice = backVideoDeviceDiscoverySession.devices.first
-        //            case .back :
-        //                newVideoDevice = frontVideoDeviceDiscoverySession.devices.first
-        //            @unknown default :
-        //                newVideoDevice = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back)
-        //            }
-        //            self.captureSession.removeInput(self.videoDeviceInput!)
-        //            guard let newInput = try? AVCaptureDeviceInput(device: newVideoDevice!), captureSession.canAddInput(newInput) else { return }
-        //            if self.captureSession.canAddInput(newInput) {
-        //                self.captureSession.addInput(newInput)
-        //                videoDeviceInput = newInput
-        //            } else {
-        //                self.captureSession.addInput(self.videoDeviceInput!)
-        //            }
+         //       sessionQueue.async { [self] in
+//                    let currentVideoDevice = self.videoInput?.device
+//                    let currentPosition = currentVideoDevice?.position  //physical position
+//                    let backVideoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInDualCamera, .builtInDualWideCamera, .builtInWideAngleCamera], mediaType: .video, position: .back)
+//                    let frontVideoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInTrueDepthCamera, .builtInWideAngleCamera], mediaType: .video, position: .front)
+//                    var newVideoDevice : AVCaptureDevice? = nil
+//                    switch currentPosition {
+//                    case .front, .unspecified :
+//                        newVideoDevice = backVideoDeviceDiscoverySession.devices.first
+//                    case .back :
+//                        newVideoDevice = frontVideoDeviceDiscoverySession.devices.first
+//                    @unknown default :
+//                        newVideoDevice = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back)
+//                    }
+//                    self.captureSession.removeInput(self.videoInput!)
+//                    guard let newInput = try? AVCaptureDeviceInput(device: newVideoDevice!), captureSession.canAddInput(newInput) else { return }
+//                    if self.captureSession.canAddInput(newInput) {
+//                        self.captureSession.addInput(newInput)
+//                        videoInput = newInput
+//                    } else {
+//                        self.captureSession.addInput(self.videoInput!)
+//                    }
         
         guard let input = captureSession.inputs.first(where: { input in guard let input = input as? AVCaptureDeviceInput else { return false }
             return input.device.hasMediaType(.video) }) as? AVCaptureDeviceInput else { return }
-        
+
         captureSession.beginConfiguration()
         defer { captureSession.commitConfiguration() }
-        
+
         // Create new capture device
         var newDevice: AVCaptureDevice?
         if input.device.position == .back {
@@ -260,18 +286,23 @@ extension SecondPageViewController : ControlViewDelegate{
         } else {
             newDevice = bestDevice(in: .back)
         }
-        
+
         do {
             videoInput = try AVCaptureDeviceInput(device: newDevice!)
         } catch let error {
             NSLog("\(error), \(error.localizedDescription)")
             return
         }
-        
-        // Swap capture device inputs
-        captureSession.removeInput(input)
-        captureSession.addInput(videoInput!)
-    }
+
+        if captureSession.canAddInput(videoInput){
+            // Swap capture device inputs
+            captureSession.removeInput(input)
+            captureSession.addInput(videoInput)
+        }       //Change camera source
+
+   }
+
+  
 }
 
 //MARK: - 비디오 관련
@@ -290,6 +321,7 @@ extension SecondPageViewController : AVCaptureFileOutputRecordingDelegate{
       // orientation을 설정해야 가로/세로 방향에 따른 레코딩 출력이 잘 나옴.
       if (connection?.isVideoOrientationSupported)! {
         connection?.videoOrientation = self.deviceOrientation
+          videoOrientation = self.deviceOrientation
       }
       
       let device = videoInput.device
@@ -302,12 +334,8 @@ extension SecondPageViewController : AVCaptureFileOutputRecordingDelegate{
           print("Error setting configuration: \(error)")
         }
       }
-      
-      // recording point, timerString에 대한 핸들링
-//      recordPoint.alpha = 1
-//      self.fadeViewInThenOut(view: recordPoint, delay: 0)
+
       self.startTimer()
-//
       videoURL = tempURL()
       videoOutput.startRecording(to: videoURL!, recordingDelegate: self)
     }
@@ -316,26 +344,20 @@ extension SecondPageViewController : AVCaptureFileOutputRecordingDelegate{
       if videoOutput.isRecording {
         self.stopTimer()
         videoOutput.stopRecording()
- //       recordPoint.layer.removeAllAnimations()
       }
     }
     
     func save(_ title:String){
         let fileURL = directoryPath.appendingPathComponent(title).appendingPathExtension("mp4")
-        print(fileURL)
         do{
             let videoData = try Data(contentsOf: videoURL!)
-            print("videoData is \(videoData)")
-            //fileManager.createFile(atPath: paths as String, contents: videoData, attributes: nil)
-            print("beforeError")
             try videoData.write(to: fileURL , options: .atomic)
-            print("afterError")
         }catch{
             print(error.localizedDescription)
         }
     }
     func saveModel(_ title:String){
-        let model = VideoModel(title: title, date: Date(), playTime: secondsOfTimer)//, thumbnail: thumbnail ?? UIImage())
+        let model = VideoModel(title: title, date: Date(), playTime: secondsOfTimer, orientation: videoOrientation?.rawValue ?? 1)
         let modelURL = directoryPath.appendingPathComponent(title).appendingPathExtension("json")
         let jsonEncoder = JSONEncoder()
         let data = try? jsonEncoder.encode(model)
@@ -378,6 +400,7 @@ extension SecondPageViewController {
                 self.save(self.videoTitle!)
                 self.saveModel(self.videoTitle!)
             }
+            self.secondsOfTimer = 0
         }
         alert.addAction(ok)
         self.present(alert, animated: true)
