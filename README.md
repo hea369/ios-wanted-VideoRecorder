@@ -34,7 +34,12 @@
 
 <img src="https://user-images.githubusercontent.com/101572946/195974227-9ec5f960-5ddf-46f2-87be-75d9cb5a1d2b.PNG" width="300" height="600"/>|<img src="https://user-images.githubusercontent.com/101572946/195974363-3dfd2644-b247-46a6-8993-60576da31b4c.gif" width="300" height="600"/>
 
+- 촬영 및 재생
 
+<img src="https://user-images.githubusercontent.com/96690194/195975712-4ae779e0-5892-4377-9c11-22e600fce47c.gif" width="300" height="600"/>|<img src="https://user-images.githubusercontent.com/96690194/195975468-880efabc-a6eb-4e65-9a1d-b969b62e75fd.gif" width="300" height="600"/>
 
+- 가로 촬영 및 재생
+
+<img src="https://user-images.githubusercontent.com/96690194/195975728-44ff0b37-be61-4ef8-8003-f36a4b249153.gif" width="300" height="600"/>|<img src="https://user-images.githubusercontent.com/96690194/195975978-3fefd08f-87a3-40dd-9d4c-981d6382c7c6.gif" width="300" height="600"/>
 
 
