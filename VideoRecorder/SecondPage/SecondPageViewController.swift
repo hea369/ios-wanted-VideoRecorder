@@ -97,18 +97,17 @@ class SecondPageViewController: UIViewController {
     }
     
     
-    func askPermissionForCamera(){   //앱 시작하자마자 권한 요청을 하지 않은 것은 비디오를 녹화하지 않아도 이미 촬영된 영상들을 감상하는 목적으로 사용할 수도 있을 것이라고 생각했기 때문이다
+    func askPermissionForCamera(){
         switch AVCaptureDevice.authorizationStatus(for: .video){
         case .authorized :
             setupCaptureSession()
         case .notDetermined :
             DispatchQueue.main.async {
-                AVCaptureDevice.requestAccess(for: .video, completionHandler: { granted in  //The requestAccess(for:completionHandler:) method is asynchronous
+                AVCaptureDevice.requestAccess(for: .video, completionHandler: { granted in
                     if granted {
                         self.setupCaptureSession()
                     }
-                }
-                )
+                })
             }
         case .denied :
             showAlertGoToSetting(device: "카메라")
@@ -154,7 +153,7 @@ class SecondPageViewController: UIViewController {
         [cancelAlert, goToSettingAlert]
             .forEach(alertController.addAction(_:))
         DispatchQueue.main.async {
-            self.present(alertController, animated: true) // must be used from main thread only
+            self.present(alertController, animated: true)
         }
     }
     
@@ -176,14 +175,9 @@ class SecondPageViewController: UIViewController {
         if captureSession.canAddInput(audioInput){
             captureSession.addInput(audioInput)
         }
-        
-        
-        //Next, add outputs for the kinds of media you plan to capture from the camera
+       
         videoOutput = AVCaptureMovieFileOutput()
-        //AVCaptureVideoDataOutput()
-//      let cameraSampleBufferQueue = globalQueue(label: "cameraGlobalQueue", qos: .userInteractive)
-//      videoOutput.setSampleBufferDelegate(self, queue: cameraSampleBufferQueue)
-        //videoOutput.connections.first?.videoOrientation = .portrait
+      
         guard captureSession.canAddOutput(videoOutput) else { return }
         captureSession.sessionPreset = .high
         captureSession.addOutput(videoOutput)
@@ -194,12 +188,12 @@ class SecondPageViewController: UIViewController {
     }
     
     func setupLivePreview(){
-        // previewLayer 세팅
+    
         let videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         videoPreviewLayer.videoGravity = .resizeAspectFill  //가득
         videoPreviewLayer.connection?.videoOrientation = .portrait
-        // UIView객체인 view 위 객체 입힘
-        self.view.layer.insertSublayer(videoPreviewLayer, at: 0)  // 맨 앞(0번쨰로)으로 가져와서 보이게끔 설정
+     
+        self.view.layer.insertSublayer(videoPreviewLayer, at: 0)
         DispatchQueue.main.async {
             videoPreviewLayer.frame = self.view.bounds
         }
@@ -250,28 +244,6 @@ extension SecondPageViewController : ControlViewDelegate{
     
     
     func switchCamera() {
-         //       sessionQueue.async { [self] in
-//                    let currentVideoDevice = self.videoInput?.device
-//                    let currentPosition = currentVideoDevice?.position  //physical position
-//                    let backVideoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInDualCamera, .builtInDualWideCamera, .builtInWideAngleCamera], mediaType: .video, position: .back)
-//                    let frontVideoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInTrueDepthCamera, .builtInWideAngleCamera], mediaType: .video, position: .front)
-//                    var newVideoDevice : AVCaptureDevice? = nil
-//                    switch currentPosition {
-//                    case .front, .unspecified :
-//                        newVideoDevice = backVideoDeviceDiscoverySession.devices.first
-//                    case .back :
-//                        newVideoDevice = frontVideoDeviceDiscoverySession.devices.first
-//                    @unknown default :
-//                        newVideoDevice = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back)
-//                    }
-//                    self.captureSession.removeInput(self.videoInput!)
-//                    guard let newInput = try? AVCaptureDeviceInput(device: newVideoDevice!), captureSession.canAddInput(newInput) else { return }
-//                    if self.captureSession.canAddInput(newInput) {
-//                        self.captureSession.addInput(newInput)
-//                        videoInput = newInput
-//                    } else {
-//                        self.captureSession.addInput(self.videoInput!)
-//                    }
         
         guard let input = captureSession.inputs.first(where: { input in guard let input = input as? AVCaptureDeviceInput else { return false }
             return input.device.hasMediaType(.video) }) as? AVCaptureDeviceInput else { return }
@@ -279,7 +251,6 @@ extension SecondPageViewController : ControlViewDelegate{
         captureSession.beginConfiguration()
         defer { captureSession.commitConfiguration() }
 
-        // Create new capture device
         var newDevice: AVCaptureDevice?
         if input.device.position == .back {
             newDevice = bestDevice(in: .front)
@@ -318,7 +289,6 @@ extension SecondPageViewController : AVCaptureFileOutputRecordingDelegate{
     private func startRecording() {
       let connection = videoOutput.connection(with: AVMediaType.video)
       
-      // orientation을 설정해야 가로/세로 방향에 따른 레코딩 출력이 잘 나옴.
       if (connection?.isVideoOrientationSupported)! {
         connection?.videoOrientation = self.deviceOrientation
           videoOrientation = self.deviceOrientation

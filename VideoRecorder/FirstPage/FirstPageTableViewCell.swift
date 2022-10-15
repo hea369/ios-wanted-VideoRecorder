@@ -40,6 +40,7 @@ class FirstPageTableViewCell: UITableViewCell {
         imageview.backgroundColor = .white
         imageview.translatesAutoresizingMaskIntoConstraints = false
         imageview.layer.cornerRadius = 20
+        imageview.clipsToBounds = true
         return imageview
     }()
     
@@ -47,7 +48,7 @@ class FirstPageTableViewCell: UITableViewCell {
         let label = UILabel()
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: CGFloat(12))
+        label.font = UIFont.boldSystemFont(ofSize: 12)
         return label
     }()
     

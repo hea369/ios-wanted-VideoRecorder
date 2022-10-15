@@ -16,7 +16,7 @@ class CoreDataManager {
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError?{
                 fatalError("Unresolved error \(error), \(error.userInfo)")
-          }
+            }
         })
         return container
     }()
@@ -64,15 +64,4 @@ class CoreDataManager {
             return false
         }
     }
-    
-//    func count<T:NSManagedObject>(request:NSFetchRequest<T>) -> Int?{
-//        do{
-//            let count = try self.context.count(for: request)
-//            return count
-//        }catch{
-//            print(error.localizedDescription)
-//            return nil
-//        }
-//    }
-
 }

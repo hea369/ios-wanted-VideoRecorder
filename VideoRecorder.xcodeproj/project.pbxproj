@@ -8,11 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		333654CE28F470BA000F8714 /* SecondPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333654CD28F470BA000F8714 /* SecondPageViewController.swift */; };
-		3362B44A28F682320044BB88 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3362B44928F682320044BB88 /* PreviewView.swift */; };
 		3362B44C28F68A610044BB88 /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3362B44B28F68A610044BB88 /* ControlView.swift */; };
 		3362B44E28F695580044BB88 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3362B44D28F695580044BB88 /* Extensions.swift */; };
 		3362B45028F6A55C0044BB88 /* CloseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3362B44F28F6A55C0044BB88 /* CloseView.swift */; };
-		33D6210728F5D8AA00705F8E /* VideoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33D6210628F5D8AA00705F8E /* VideoHelper.swift */; };
 		33FC057728F9FCE5006C6031 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FC057628F9FCE5006C6031 /* CoreDataManager.swift */; };
 		33FC057A28F9FD27006C6031 /* VideoTitle.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 33FC057828F9FD27006C6031 /* VideoTitle.xcdatamodeld */; };
 		33FC057D28F9FD55006C6031 /* Title+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FC057B28F9FD55006C6031 /* Title+CoreDataClass.swift */; };
@@ -24,15 +22,14 @@
 		6321038428F06E7300CC1609 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6321038228F06E7300CC1609 /* LaunchScreen.storyboard */; };
 		D82D128628F5411A00A43F2D /* FirstPageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82D128528F5411A00A43F2D /* FirstPageTableViewCell.swift */; };
 		D82D128828F6BA8200A43F2D /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82D128728F6BA8200A43F2D /* HeaderView.swift */; };
+		D82D128A28FA7BA200A43F2D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82D128928FA7BA200A43F2D /* Model.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		333654CD28F470BA000F8714 /* SecondPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondPageViewController.swift; sourceTree = "<group>"; };
-		3362B44928F682320044BB88 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		3362B44B28F68A610044BB88 /* ControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlView.swift; sourceTree = "<group>"; };
 		3362B44D28F695580044BB88 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		3362B44F28F6A55C0044BB88 /* CloseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseView.swift; sourceTree = "<group>"; };
-		33D6210628F5D8AA00705F8E /* VideoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoHelper.swift; sourceTree = "<group>"; };
 		33FC057628F9FCE5006C6031 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		33FC057928F9FD27006C6031 /* VideoTitle.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VideoTitle.xcdatamodel; sourceTree = "<group>"; };
 		33FC057B28F9FD55006C6031 /* Title+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Title+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -46,6 +43,7 @@
 		6321038528F06E7300CC1609 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D82D128528F5411A00A43F2D /* FirstPageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstPageTableViewCell.swift; sourceTree = "<group>"; };
 		D82D128728F6BA8200A43F2D /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		D82D128928FA7BA200A43F2D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,10 +84,8 @@
 				33FC057628F9FCE5006C6031 /* CoreDataManager.swift */,
 				D82D128228F4608F00A43F2D /* FirstPage */,
 				D82D128328F460A500A43F2D /* SecondPage */,
-				D82D128428F460B500A43F2D /* ThirdPage */,
+				D82D128B28FA894600A43F2D /* Model */,
 				6321038028F06E7300CC1609 /* Assets.xcassets */,
-				33D6210628F5D8AA00705F8E /* VideoHelper.swift */,
-				3362B44D28F695580044BB88 /* Extensions.swift */,
 				6321038228F06E7300CC1609 /* LaunchScreen.storyboard */,
 				6321038528F06E7300CC1609 /* Info.plist */,
 			);
@@ -110,18 +106,19 @@
 			isa = PBXGroup;
 			children = (
 				333654CD28F470BA000F8714 /* SecondPageViewController.swift */,
-				3362B44928F682320044BB88 /* PreviewView.swift */,
 				3362B44B28F68A610044BB88 /* ControlView.swift */,
 				3362B44F28F6A55C0044BB88 /* CloseView.swift */,
 			);
 			path = SecondPage;
 			sourceTree = "<group>";
 		};
-		D82D128428F460B500A43F2D /* ThirdPage */ = {
+		D82D128B28FA894600A43F2D /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D82D128928FA7BA200A43F2D /* Model.swift */,
+				3362B44D28F695580044BB88 /* Extensions.swift */,
 			);
-			path = ThirdPage;
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -201,12 +198,11 @@
 				3362B45028F6A55C0044BB88 /* CloseView.swift in Sources */,
 				6321037828F06E7200CC1609 /* AppDelegate.swift in Sources */,
 				3362B44E28F695580044BB88 /* Extensions.swift in Sources */,
+				D82D128A28FA7BA200A43F2D /* Model.swift in Sources */,
 				33FC057E28F9FD55006C6031 /* Title+CoreDataProperties.swift in Sources */,
-				33D6210728F5D8AA00705F8E /* VideoHelper.swift in Sources */,
 				6321037A28F06E7200CC1609 /* SceneDelegate.swift in Sources */,
 				33FC057A28F9FD27006C6031 /* VideoTitle.xcdatamodeld in Sources */,
 				3362B44C28F68A610044BB88 /* ControlView.swift in Sources */,
-				3362B44A28F682320044BB88 /* PreviewView.swift in Sources */,
 				33FC057728F9FCE5006C6031 /* CoreDataManager.swift in Sources */,
 				D82D128628F5411A00A43F2D /* FirstPageTableViewCell.swift in Sources */,
 			);
@@ -347,7 +343,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 53A2NCY57F;
+				DEVELOPMENT_TEAM = 69T5P6ASGW;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VideoRecorder/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "이 앱은 카메라를 사용하는 앱입니다";
@@ -361,7 +357,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.yagom.VideoRecorder;
+				PRODUCT_BUNDLE_IDENTIFIER = net.hea369.video;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -376,7 +372,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 53A2NCY57F;
+				DEVELOPMENT_TEAM = 69T5P6ASGW;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VideoRecorder/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "이 앱은 카메라를 사용하는 앱입니다";
@@ -390,7 +386,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.yagom.VideoRecorder;
+				PRODUCT_BUNDLE_IDENTIFIER = net.hea369.video;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
