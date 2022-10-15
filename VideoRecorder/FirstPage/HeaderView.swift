@@ -13,7 +13,7 @@ class HeaderView: UITableViewHeaderFooterView {
     
     let textlabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor.black
+        label.textColor = .label
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 20)
         return label
@@ -23,7 +23,7 @@ class HeaderView: UITableViewHeaderFooterView {
         let videobutton = UIButton()
         videobutton.setImage(UIImage(systemName: "video.fill.badge.plus"), for: .normal)
         videobutton.translatesAutoresizingMaskIntoConstraints = false
-        videobutton.tintColor = .black
+        videobutton.tintColor = .label
         return videobutton
     }()
     

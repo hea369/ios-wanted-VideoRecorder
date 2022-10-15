@@ -13,7 +13,7 @@ class FirstPageTableViewCell: UITableViewCell {
     
     let textlabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor.black
+        label.textColor = .label
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: CGFloat(20))
         return label
@@ -21,8 +21,9 @@ class FirstPageTableViewCell: UITableViewCell {
     
     let datelabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor.gray
+        label.textColor = .label
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: CGFloat(14))
         return label
     }()
     
@@ -44,7 +45,7 @@ class FirstPageTableViewCell: UITableViewCell {
     
     let timelabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor.black
+        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: CGFloat(12))
         return label
@@ -62,7 +63,7 @@ class FirstPageTableViewCell: UITableViewCell {
         let imageview = UIImageView()
         imageview.translatesAutoresizingMaskIntoConstraints = false
         imageview.layer.cornerRadius = 5
-        imageview.tintColor = .black
+        imageview.tintColor = .label
         return imageview
     }()
     
@@ -70,7 +71,7 @@ class FirstPageTableViewCell: UITableViewCell {
         let imageview = UIImageView()
         imageview.translatesAutoresizingMaskIntoConstraints = false
         imageview.layer.cornerRadius = 5
-        imageview.tintColor = .black
+        imageview.tintColor = .label
         return imageview
     }()
     
@@ -106,18 +107,18 @@ class FirstPageTableViewCell: UITableViewCell {
             viewUI.heightAnchor.constraint(equalToConstant: 80),
             viewUI.widthAnchor.constraint(equalToConstant: 80),
             
-            image.topAnchor.constraint(equalTo: viewUI.topAnchor, constant: 5),
-            image.leadingAnchor.constraint(equalTo: viewUI.leadingAnchor, constant: 5),
-            image.trailingAnchor.constraint(equalTo: viewUI.trailingAnchor, constant: -5),
-            image.bottomAnchor.constraint(equalTo: viewUI.bottomAnchor, constant: -5),
+            image.topAnchor.constraint(equalTo: viewUI.topAnchor, constant: 2),
+            image.leadingAnchor.constraint(equalTo: viewUI.leadingAnchor, constant: 2),
+            image.trailingAnchor.constraint(equalTo: viewUI.trailingAnchor, constant: -2),
+            image.bottomAnchor.constraint(equalTo: viewUI.bottomAnchor, constant: -2),
             
-            timelabel.topAnchor.constraint(equalTo: image.topAnchor, constant: 40),
+            timelabel.topAnchor.constraint(equalTo: image.topAnchor, constant: 55),
             timelabel.leadingAnchor.constraint(equalTo: image.leadingAnchor, constant: 5),
             timelabel.trailingAnchor.constraint(equalTo: image.trailingAnchor, constant: -5),
             timelabel.bottomAnchor.constraint(equalTo: image.bottomAnchor, constant: -5),
             
             textlabel.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 20),
-            textlabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 30),
+            textlabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 25),
             textlabel.widthAnchor.constraint(equalToConstant: 160),
             
             datelabel.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 20),
@@ -128,9 +129,9 @@ class FirstPageTableViewCell: UITableViewCell {
             viewUI2.widthAnchor.constraint(equalToConstant: 80),
             viewUI2.heightAnchor.constraint(equalToConstant: 40),
             
-            image2.topAnchor.constraint(equalTo: viewUI2.topAnchor, constant: 20),
+            image2.topAnchor.constraint(equalTo: viewUI2.topAnchor, constant: 17),
             image2.leadingAnchor.constraint(equalTo: viewUI2.leadingAnchor, constant: 2),
-            image2.bottomAnchor.constraint(equalTo: viewUI2.bottomAnchor, constant: -20),
+            image2.bottomAnchor.constraint(equalTo: viewUI2.bottomAnchor, constant: -17),
             image2.widthAnchor.constraint(equalToConstant: 35),
             
             image3.topAnchor.constraint(equalTo: viewUI2.topAnchor, constant: 5),
