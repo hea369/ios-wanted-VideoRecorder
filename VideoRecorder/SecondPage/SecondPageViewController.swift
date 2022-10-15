@@ -21,6 +21,7 @@ class SecondPageViewController: UIViewController {
 
     let captureSession = AVCaptureSession()
     var videoDevice : AVCaptureDevice!
+    var audioDevice : AVCaptureDevice!
     var videoInput : AVCaptureDeviceInput!
     var audioInput : AVCaptureDeviceInput!
     var videoOutput: AVCaptureMovieFileOutput!
@@ -72,25 +73,24 @@ class SecondPageViewController: UIViewController {
         askPermissionForMicrophone()
         askPermissionForCamera()
         initMotionManager()
-        askPermissionForCamera()
         setControlView()
         setCloseView()
         controlView.delegate = self
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-      super.viewWillAppear(animated)
-      initMotionManager()
-      if !captureSession.isRunning {
-          startCaptureSession()
-      }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-      super.viewWillDisappear(animated)
-      motionManager.stopAccelerometerUpdates()
-      stopTimer()
-    }
+//    override func viewWillAppear(_ animated: Bool) {
+//      super.viewWillAppear(animated)
+//      initMotionManager()
+//      if !captureSession.isRunning {
+//          startCaptureSession()
+//      }
+//    }
+//
+//    override func viewWillDisappear(_ animated: Bool) {
+//      super.viewWillDisappear(animated)
+//      motionManager.stopAccelerometerUpdates()
+//      stopTimer()
+//    }
     
     @objc func close(){
         self.dismiss(animated: true)
@@ -164,13 +164,13 @@ class SecondPageViewController: UIViewController {
         
         //videoDevice = videoDevice
         
-        guard let videoDeviceInput = try? AVCaptureDeviceInput(device: videoDevice!), captureSession.canAddInput(videoDeviceInput) else { return }
+        guard let videoDeviceInput = try? AVCaptureDeviceInput(device: videoDevice), captureSession.canAddInput(videoDeviceInput) else { return }
         
         self.videoInput = videoDeviceInput
         
-        captureSession.addInput(videoDeviceInput)
+        captureSession.addInput(videoInput)
         
-        let audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)!
+        audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)!
         audioInput = try? AVCaptureDeviceInput(device: audioDevice)
         if captureSession.canAddInput(audioInput){
             captureSession.addInput(audioInput)
@@ -244,35 +244,34 @@ extension SecondPageViewController : ControlViewDelegate{
     
     
     func switchCamera() {
-        
-        guard let input = captureSession.inputs.first(where: { input in guard let input = input as? AVCaptureDeviceInput else { return false }
-            return input.device.hasMediaType(.video) }) as? AVCaptureDeviceInput else { return }
 
+        guard let inputVideo = captureSession.inputs[0] as? AVCaptureDeviceInput else {return}
+        guard let inputAudio = captureSession.inputs[1] as? AVCaptureDeviceInput else {return}
+        
         captureSession.beginConfiguration()
         defer { captureSession.commitConfiguration() }
-
+        
         var newDevice: AVCaptureDevice?
-        if input.device.position == .back {
+        if inputVideo.device.position == .back {
             newDevice = bestDevice(in: .front)
         } else {
             newDevice = bestDevice(in: .back)
         }
-
+        
         do {
             videoInput = try AVCaptureDeviceInput(device: newDevice!)
+            audioInput = try AVCaptureDeviceInput(device: audioDevice)
         } catch let error {
             NSLog("\(error), \(error.localizedDescription)")
             return
         }
 
-        if captureSession.canAddInput(videoInput){
-            // Swap capture device inputs
-            captureSession.removeInput(input)
+            captureSession.removeInput(inputVideo)
             captureSession.addInput(videoInput)
-        }       //Change camera source
 
-   }
-
+            captureSession.removeInput(inputAudio)
+            captureSession.addInput(audioInput)
+    }
   
 }
 
